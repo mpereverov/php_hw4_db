@@ -1,0 +1,20 @@
+{
+    "name": "michael/hw4",
+    "description": "HomeWork#4",
+    "authors": [
+        {
+            "name": "Michael Pereverov",
+            "email": "mpereverov@gmail.com"
+        }
+    ],
+
+    "autoload": {
+        "psr-4": {
+            "Layer\\": "src/Layer"
+        }
+    },
+
+    "require": {
+        "php": ">=5.5.0"
+    }
+}
