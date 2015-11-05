@@ -7,20 +7,29 @@ use PDOException;
 
 class Connector implements ConnectorInterface
 {
-    private $db;
+    private $DBH;
 
-    public function connect()
+    /**
+     * @param $dbs
+     * @param $user
+     * @param $pass
+     * @return PDO
+     */
+    public function connect($dbs, $user, $pass)
     {
         try {
-            $connect_str = DB_DRIVER . ':host='. DB_HOST . ';dbname=' . DB_NAME;
-            $db = new PDO($connect_str,DB_USER,DB_PASS);
+            $this->DBH = new PDO($dbs, $user, $pass);
+            $this->DBH->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         }
-        return $DBH;
+        catch(PDOException $err) {
+            echo $err->getMessage();
+        }
+        return $this->DBH;
     }
 
-    public function connectClose($db)
+    public function connectClose($DBH)
     {
-
+        $this->DBH = null;
     }
 
 }

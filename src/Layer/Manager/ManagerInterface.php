@@ -9,7 +9,7 @@ interface ManagerInterface
      * @param mixed $entity
      * @return mixed
      */
-    public function insert($entity);
+    public function insert($STH);
     /**
      * Update exist entity data in the DB
      * @param $entity
@@ -22,4 +22,19 @@ interface ManagerInterface
      * @return mixed
      */
     public function remove($entity);
+
+    public function find($entityName, $id);
+    /**
+     * Search all entity data in the DB
+     * @param $entityName
+     * @return array
+     */
+    public function findAll($entityName);
+    /**
+     * Search all entity data in the DB like $criteria rules
+     * @param $entityName
+     * @param array $criteria
+     * @return mixed
+     */
+    public function findBy($entityName, $criteria = []);
 }

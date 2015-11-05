@@ -4,18 +4,21 @@ namespace Layer\Connector;
  * Interface ConnectorInterface
  * @package Layer\Connector
  */
+
 interface ConnectorInterface
 {
+
     /**
-     * @param $host
+     * @param $dbs
      * @param $user
-     * @param $password
+     * @param $pass
      * @return mixed
      */
-    public function connect($host, $user, $password);
+    public function connect($dbs, $user, $pass);
+
     /**
-     * @param $db
+     * @param $DBH
      * @return mixed
      */
-    public function connectClose($db);
+    public function connectClose($DBH);
 }
