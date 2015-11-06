@@ -2,20 +2,22 @@
 
 namespace Layer\Manager;
 
+use Layer\Connector\Connector;
 
-class DbManager implements ManagerInterface
+class DbManager extends Connector implements DbManagerInterface
 {
 
-     public $STH;
+    protected $STH;
+
 
     /**
      * Insert new entity data to the DB
-     * @param mixed $STH
+     * @param mixed $entity
      * @return mixed
      */
-    public function insert($STH)
+    public function insert($entity)
     {
-        $this->STH = $DBH->prepare("INSERT INTO folks (name, addr, city) values (:name, :addr, :city)");
+        $this->STH = $this->DBH->prepare("INSERT INTO hw4_user (first_name, last_name, password) values (:first_name, :last_name, :password)");
     }
 
     /**

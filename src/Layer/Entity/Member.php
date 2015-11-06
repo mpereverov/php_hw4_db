@@ -1,6 +1,6 @@
 <?php
 
-class MemberClass
+class Member
 {
     protected $firstName;
     protected $lastName;

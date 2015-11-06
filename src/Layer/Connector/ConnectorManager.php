@@ -7,7 +7,7 @@ use PDOException;
 
 class Connector implements ConnectorInterface
 {
-    private $DBH;
+    protected $DBH;
 
     /**
      * @param $dbs
