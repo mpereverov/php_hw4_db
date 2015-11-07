@@ -1,22 +1,25 @@
 <?php
 
-class Member
+namespace Layer\Entity;
+
+class User
 {
+    protected $id;
     protected $firstName;
     protected $lastName;
     protected $password;
     protected $login;
     protected $description;
     protected $group;
-
-    public function __construct($firstName, $lastName, $password, $login, $description, $group)
+    
+    public function setId($id)
     {
-        $this->setFirstName($firstName);
-        $this->setLastName($lastName);
-        $this->setPassword($password);
-        $this->setLogin($login);
-        $this->setDescription($description);
-        $this->setGroup($group);
+        $this->id = $id;
+    }
+
+    public function getId()
+    {
+        return $this->id;
     }
 
     public function setFirstName($firstName)

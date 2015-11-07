@@ -4,20 +4,8 @@ namespace Layer\Manager;
 
 interface DbManagerInterface
 {
-    /**
-     * Insert new entity data to the DB
-     * @param $entity
-     * @return mixed
-     * @internal param mixed $entity
-     */
-    public function insert($entity);
 
-    /**
-     * Update exist entity data in the DB
-     * @param $entity
-     * @return mixed
-     */
-    public function update($entity);
+    public function save(Group $group);
 
     /**
      * Delete entity data from the DB
@@ -26,20 +14,22 @@ interface DbManagerInterface
      */
     public function remove($entity);
 
-    public function find($entityName, $id);
+    /**
+     * @param $id
+     * @return mixed
+     */
+    public function find($id);
 
     /**
      * Search all entity data in the DB
-     * @param $entityName
      * @return array
      */
-    public function findAll($entityName);
+    public function findAll();
 
     /**
      * Search all entity data in the DB like $criteria rules
-     * @param $entityName
-     * @param array $criteria
+     * @param array $attributes
      * @return mixed
      */
-    public function findBy($entityName, $criteria = []);
+    public function findBy(array $attributes);
 }

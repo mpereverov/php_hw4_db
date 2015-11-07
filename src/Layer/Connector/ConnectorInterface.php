@@ -9,12 +9,13 @@ interface ConnectorInterface
 {
 
     /**
-     * @param $dbs
-     * @param $user
-     * @param $pass
+     * @param array $config
      * @return mixed
+     * @internal param $dbs
+     * @internal param $user
+     * @internal param $pass
      */
-    public function connect($dbs, $user, $pass);
+    public function connect(array $config);
 
     /**
      * @param $DBH
