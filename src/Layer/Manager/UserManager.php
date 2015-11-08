@@ -1,16 +1,15 @@
 <?php
 
 namespace Layer\Manager;
-namespace Layer\Connector;
-namespace Layer\Entity;
 
+use Layer\Entity\Group;
 use PDO;
 
-class UserManager
+class UserManager extends ConnectorManager implements DbManagerInterface
 {
     public function find($id)
     {
-        $stmt = $dbh->prepare('SELECT * FROM group WHERE id = :id');
+        $stmt = $this->DBH->prepare('SELECT * FROM hw4_user WHERE id = :id');
         $stmt->execute(['id' => $id]);
 
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -21,7 +20,7 @@ class UserManager
 
     public function findAll()
     {
-        $stmt = $dbh->prepare('SELECT * FROM group');
+        $stmt = $this->DBH->prepare('SELECT * FROM hw4_user');
         $stmt->execute();
 
         $groups = [];
@@ -39,8 +38,8 @@ class UserManager
             $attributeBindings[] = "$name = :$name";
         }
 
-        $sql = 'SELECT * FROM group WHERE ' . implode(' AND ', $attributeBindings);
-        $stmt = $dbh->prepare($sql);
+        $sql = 'SELECT * FROM hw4_user WHERE ' . implode(' AND ', $attributeBindings);
+        $stmt = $this->DBH->prepare($sql);
         $stmt->execute($attributes);
 
         $groups = [];
@@ -63,14 +62,14 @@ class UserManager
     public function save(Group $group)
     {
         if ($group->getId()) {
-            $stmt = $dbh->prepare('UPDATE group SET name = :name WHERE id = :id');
+            $stmt = $this->DBH->prepare('UPDATE hw4_user SET name = :name WHERE id = :id');
 
             return $stmt->execute([
                 'id' => $group->getId(),
                 'name' -> $group->getName()
             ]);
         } else {
-            $stmt = $dbh->prepare('INSERT INTO group SET name = :name');
+            $stmt = $this->DBH->prepare('INSERT INTO hw4_user SET name = :name');
 
             return $stmt->execute(['name' => $group->getName()]);
         }
@@ -78,7 +77,7 @@ class UserManager
 
     public function remove(Group $group)
     {
-        $stmt = $dbh->prepare('DELETE FROM group WHERE id = :id');
+        $stmt = $this->DBH->prepare('DELETE FROM hw4_user WHERE id = :id');
 
         return $stmt->execute(['id' => $group->getId()]);
     }

@@ -2,6 +2,8 @@
 
 namespace Layer\Manager;
 
+use Layer\Entity\Group;
+
 interface DbManagerInterface
 {
 
@@ -9,10 +11,11 @@ interface DbManagerInterface
 
     /**
      * Delete entity data from the DB
-     * @param $entity
+     * @param Group $group
      * @return mixed
+     * @internal param $entity
      */
-    public function remove($entity);
+    public function remove(Group $group);
 
     /**
      * @param $id

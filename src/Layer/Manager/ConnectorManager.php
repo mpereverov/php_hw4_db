@@ -1,11 +1,11 @@
 <?php
 
-namespace Layer\Connector;
+namespace Layer\Manager;
 
 use PDO;
 use PDOException;
 
-class Connector implements ConnectorInterface
+class ConnectorManager implements ConnectorInterface
 {
     protected $DBH;
 

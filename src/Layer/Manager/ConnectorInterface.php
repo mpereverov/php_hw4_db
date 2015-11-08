@@ -1,8 +1,8 @@
 <?php
-namespace Layer\Connector;
+namespace Layer\Manager;
 /**
  * Interface ConnectorInterface
- * @package Layer\Connector
+ * @package Layer\Manager
  */
 
 interface ConnectorInterface

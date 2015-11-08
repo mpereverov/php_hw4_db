@@ -1,16 +1,19 @@
 <?php
 
 namespace Layer\Manager;
-namespace Layer\Connector;
-namespace Layer\Entity;
 
+use Layer\Entity\Group;
 use PDO;
 
-class GroupManager extends Connector implements DbManagerInterface
+class GroupManager extends ConnectorManager implements DbManagerInterface
 {
+    /**
+     * @param $id
+     * @return Group
+     */
     public function find($id)
     {
-        $stmt = $DBH->prepare('SELECT * FROM group WHERE id = :id');
+        $stmt = $this->DBH->prepare('SELECT * FROM hw4_group WHERE id = :id');
         $stmt->execute(['id' => $id]);
 
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -21,7 +24,7 @@ class GroupManager extends Connector implements DbManagerInterface
 
     public function findAll()
     {
-        $stmt = $DBH->prepare('SELECT * FROM group');
+        $stmt = $this->DBH->prepare('SELECT * FROM hw4_group');
         $stmt->execute();
 
         $groups = [];
@@ -39,8 +42,8 @@ class GroupManager extends Connector implements DbManagerInterface
             $attributeBindings[] = "$name = :$name";
         }
 
-        $sql = 'SELECT * FROM group WHERE ' . implode(' AND ', $attributeBindings);
-        $stmt = $DBH->prepare($sql);
+        $sql = 'SELECT * FROM hw4_group WHERE ' . implode(' AND ', $attributeBindings);
+        $stmt = $this->DBH->prepare($sql);
         $stmt->execute($attributes);
 
         $groups = [];
@@ -63,14 +66,14 @@ class GroupManager extends Connector implements DbManagerInterface
     public function save(Group $group)
     {
         if ($group->getId()) {
-            $stmt = $dbh->prepare('UPDATE group SET name = :name WHERE id = :id');
+            $stmt = $this->DBH->prepare('UPDATE hw4_group SET name = :name WHERE id = :id');
 
             return $stmt->execute([
                 'id' => $group->getId(),
                 'name' -> $group->getName()
             ]);
         } else {
-            $stmt = $dbh->prepare('INSERT INTO group SET name = :name');
+            $stmt = $this->DBH->prepare('INSERT INTO hw4_group SET name = :name');
 
             return $stmt->execute(['name' => $group->getName()]);
         }
@@ -78,7 +81,7 @@ class GroupManager extends Connector implements DbManagerInterface
 
     public function remove(Group $group)
     {
-        $stmt = $dbh->prepare('DELETE FROM group WHERE id = :id');
+        $stmt = $this->DBH->prepare('DELETE FROM hw4_group WHERE id = :id');
 
         return $stmt->execute(['id' => $group->getId()]);
     }
