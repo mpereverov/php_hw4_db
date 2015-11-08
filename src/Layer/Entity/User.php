@@ -52,16 +52,6 @@ class User
         return $this->password;
     }
 
-    public function setLogin($login)
-    {
-        $this->login = $login;
-    }
-
-    public function getLogin()
-    {
-        return $this->login;
-    }
-
     public function setDescription($description)
     {
         $this->description = $description;

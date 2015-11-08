@@ -2,18 +2,18 @@
 
 namespace Layer\Manager;
 
-use Layer\Entity\Group;
 use PDO;
+use Layer\Entity\Group;
 
-class GroupManager extends ConnectorManager implements DbManagerInterface
+class GroupManager extends EntityManager
 {
     /**
-     * @param $id
+     * @param int $id
      * @return Group
      */
     public function find($id)
     {
-        $stmt = $this->DBH->prepare('SELECT * FROM hw4_group WHERE id = :id');
+        $stmt = $this->connection->prepare('SELECT * FROM hw4_group WHERE id = :id');
         $stmt->execute(['id' => $id]);
 
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -22,9 +22,12 @@ class GroupManager extends ConnectorManager implements DbManagerInterface
         return $group;
     }
 
+    /**
+     * @return Group[]
+     */
     public function findAll()
     {
-        $stmt = $this->DBH->prepare('SELECT * FROM hw4_group');
+        $stmt = $this->connection->prepare('SELECT * FROM hw4_group');
         $stmt->execute();
 
         $groups = [];
@@ -35,6 +38,10 @@ class GroupManager extends ConnectorManager implements DbManagerInterface
         return $groups;
     }
 
+    /**
+     * @param array $attributes ex.: ['active' => 1]
+     * @return Group[]
+     */
     public function findBy(array $attributes)
     {
         $attributeBindings = [];
@@ -43,7 +50,7 @@ class GroupManager extends ConnectorManager implements DbManagerInterface
         }
 
         $sql = 'SELECT * FROM hw4_group WHERE ' . implode(' AND ', $attributeBindings);
-        $stmt = $this->DBH->prepare($sql);
+        $stmt = $this->connection->prepare($sql);
         $stmt->execute($attributes);
 
         $groups = [];
@@ -54,35 +61,48 @@ class GroupManager extends ConnectorManager implements DbManagerInterface
         return $groups;
     }
 
+    /**
+     * @param array $row
+     * @return Group
+     */
     protected function format(array $row)
     {
         $group = new Group();
+
         $group->setId($row['id']);
         $group->setName($row['name']);
 
         return $group;
     }
 
-    public function save(Group $group)
+    /**
+     * @param Group $entity
+     * @return bool
+     */
+    public function save($entity)
     {
-        if ($group->getId()) {
-            $stmt = $this->DBH->prepare('UPDATE hw4_group SET name = :name WHERE id = :id');
+        if ($entity->getId()) {
+            $stmt = $this->connection->prepare('UPDATE hw4_group SET name = :name WHERE id = :id');
 
             return $stmt->execute([
-                'id' => $group->getId(),
-                'name' -> $group->getName()
+                'id' => $entity->getId(),
+                'name' => $entity->getName(),
             ]);
         } else {
-            $stmt = $this->DBH->prepare('INSERT INTO hw4_group SET name = :name');
+            $stmt = $this->connection->prepare('INSERT INTO hw4_group SET name = :name');
 
-            return $stmt->execute(['name' => $group->getName()]);
+            return $stmt->execute(['name' => $entity->getName()]);
         }
     }
 
-    public function remove(Group $group)
+    /**
+     * @param Group $group
+     * @return bool
+     */
+    public function remove($entity)
     {
-        $stmt = $this->DBH->prepare('DELETE FROM hw4_group WHERE id = :id');
+        $stmt = $this->connection->prepare('DELETE FROM hw4_group WHERE id = :id');
 
-        return $stmt->execute(['id' => $group->getId()]);
+        return $stmt->execute(['id' => $entity->getId()]);
     }
 }

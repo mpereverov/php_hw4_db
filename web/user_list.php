@@ -1,10 +1,10 @@
 <?php
 
+require_once __DIR__ . '/../bootstrap.php';
+
 use Layer\Manager\UserManager;
 use Layer\Entity\User;
 
-$user = new User;
-$users = new UserManager;
 ?>
 <html>
     <head>
@@ -14,7 +14,7 @@ $users = new UserManager;
         <h1>Users</h1>
         <a href="user_form.php">Create new user</a><br>
         <ul>
-            <?php foreach ($users->findAll() as $usr) { ?>
+            <?php foreach ($userManager->findAll() as $user) { ?>
                 <li>
                     <?php print $user->getFirstName(); ?>
                     <?php print $user->getLastName(); ?>

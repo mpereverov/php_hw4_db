@@ -2,14 +2,18 @@
 
 namespace Layer\Manager;
 
-use Layer\Entity\Group;
 use PDO;
+use Layer\Entity\User;
 
-class UserManager extends ConnectorManager implements DbManagerInterface
+class UserManager extends EntityManager
 {
+    /**
+     * @param int $id
+     * @return User
+     */
     public function find($id)
     {
-        $stmt = $this->DBH->prepare('SELECT * FROM hw4_user WHERE id = :id');
+        $stmt = $this->connection->prepare('SELECT * FROM hw4_user WHERE id = :id');
         $stmt->execute(['id' => $id]);
 
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -18,9 +22,12 @@ class UserManager extends ConnectorManager implements DbManagerInterface
         return $group;
     }
 
+    /**
+     * @return User[]
+     */
     public function findAll()
     {
-        $stmt = $this->DBH->prepare('SELECT * FROM hw4_user');
+        $stmt = $this->connection->prepare('SELECT * FROM hw4_user');
         $stmt->execute();
 
         $groups = [];
@@ -31,6 +38,10 @@ class UserManager extends ConnectorManager implements DbManagerInterface
         return $groups;
     }
 
+    /**
+     * @param array $attributes
+     * @return Group[]
+     */
     public function findBy(array $attributes)
     {
         $attributeBindings = [];
@@ -39,7 +50,7 @@ class UserManager extends ConnectorManager implements DbManagerInterface
         }
 
         $sql = 'SELECT * FROM hw4_user WHERE ' . implode(' AND ', $attributeBindings);
-        $stmt = $this->DBH->prepare($sql);
+        $stmt = $this->connection->prepare($sql);
         $stmt->execute($attributes);
 
         $groups = [];
@@ -50,41 +61,71 @@ class UserManager extends ConnectorManager implements DbManagerInterface
         return $groups;
     }
 
+    /**
+     * @param array $row
+     * @return User
+     */
     protected function format(array $row)
     {
-        $group = new Group();
-        $group->setId($row['id']);
-        $group->setName($row['name']);
+        $user = new User();
 
-        return $group;
+        $user->setId($row['id']);
+        $user->setFirstName($row['first_name']);
+        $user->setLastName($row['last_name']);
+        $user->setPassword($row['password']);
+        $user->setDescription($row['description']);
+        $user->setGroup($row['group']);
+
+        return $user;
     }
 
-    public function save(Group $group)
+    /**
+     * @param User $entity
+     * @return bool
+     */
+    public function save($entity)
     {
-        if ($group->getId()) {
-            $stmt = $this->DBH->prepare('UPDATE hw4_user SET name = :name WHERE id = :id');
+        $fieldsSql = 
+            'first_name  = :firstName,' .
+            'last_name   = :lastName,' .
+            'password    = :password,' .
+            'description = :description,' .
+            'group       = :group';
 
-            return $stmt->execute([
-                'id' => $group->getId(),
-                'name' -> $group->getName()
-            ]);
+        $fields = [
+            'firstName' => $entity->getFirstName(),
+            'lastName' => $entity->getLastName(),
+            'password' => $entity->getPassword(),
+            'description' => $entity->getDescription(),
+            'group' => $entity->getGroup(),
+        ];
+        
+        if ($entity->getId()) {
+            $sql = 'UPDATE hw4_user SET ' . $fieldsSql . ' WHERE id = :id';
+            $fields['id'] = $entity->getId();
         } else {
-            $stmt = $this->DBH->prepare('INSERT INTO hw4_user SET name = :name');
-
-            return $stmt->execute(['name' => $group->getName()]);
+            $sql = 'INSERT INTO hw4_user SET ' . $fieldsSql;
         }
+        
+        $stmt = $this->connection->prepare($sql);
+
+        if (!$stmt->execute($fields)) {
+            return false;
+        }
+        
+        if ($entity->getGroup()) {
+                $stmt = $this->connection->prepare('INSERT INTO hw4_group SET name = :name');
+                $stmt->execute(['name' => $name]);
+        }
+        
+        return true;
     }
 
-    public function remove(Group $group)
+    public function remove($entity)
     {
-        $stmt = $this->DBH->prepare('DELETE FROM hw4_user WHERE id = :id');
+        $stmt = $this->connection->prepare('DELETE FROM hw4_user WHERE id = :id');
 
-        return $stmt->execute(['id' => $group->getId()]);
+        return $stmt->execute(['id' => $entity->getId()]);
     }
 }
-//
-//SELECT u.*
-//FROM users_groups ug
-//INNER JOIN user u ON u.id = ug.user_id
-//WHERE ug.group_id = :group_id
-    
+
